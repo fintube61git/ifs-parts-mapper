@@ -1,74 +1,48 @@
-# IFS PARTS MAPPER — SPEC AUTHORITY MAP
+# IFS PARTS MAPPER — SPEC AUTHORITY MAP (V1)
 
-This file defines the hierarchy of specifications for the IFS Parts Mapper project.
+This file defines the authoritative hierarchy of specifications for IFS Parts Mapper V1.
 
 If any documents conflict, the higher-priority document always overrides lower-priority ones.
 
 ---
 
-## TIER 0 — Absolute Canonical Authority (Non-Negotiable)
+## Governance Rule (Tier 0)
 
-1) spec/IFS_PARTS_MAPPER_MASTER_SPEC.md
+spec/IFS_Parts_Mapper_V1_Supreme_Authority.md
 
-If any other document conflicts with this Master Spec, the other document is wrong.
-
-No other document may override, replace, or reinterpret the Master Spec.
-
----
-
-## TIER 1 — Enforcement & Guardrails (Must Not Contradict Tier 0)
-
-These documents enforce or constrain implementation, but may not contradict Tier 0:
-
-- spec/AI_CODING_PROMPT_STRICT.md
-- spec/IFS_Parts_Mapper_Anti_Drift_Protocol.md
-- spec/IFS_Parts_Mapper_Implementation_Red_Flags.md
-
-If any Tier 1 document conflicts with Tier 0, Tier 0 wins.
+This file defines the final authority rules for V1.
+No other spec files should be edited to resolve conflicts; follow its authority order.
 
 ---
 
-## TIER 2 — Derived / Secondary Specs (Helpful, Not Canon)
+## Canonical Authority Order (V1)
 
-These may summarize, harden, or restate rules, but they are NOT canonical:
+1) spec/IFS_Parts_Mapper_v1_Errata.md  
+2) spec/IFS_Parts_Mapper_V1_Clarifications_Patch.md  
+3) spec/IFS_Parts_Mapper_Minimal_Canonical_JSON_Schema_V1.md  
+4) spec/IFS_Parts_Mapper_V1_Model_Contract.md  
+5) spec/IFS_Parts_Mapper_Master_Spec_Hardened.md  
+6) All other documents (UI, Build Map, Mapping Table, etc.)
 
-- spec/IFS_Parts_Mapper_Master_Spec_Hardened.md
-- spec/IFS_Parts_Mapper_V1_Supreme_Authority.md
-
-If any Tier 2 document conflicts with Tier 0 or Tier 1, Tier 0/1 wins.
-
----
-
-## TIER 3 — Implementation Guidance (How-To, Not Behavior Authority)
-
-These documents guide implementation and mapping to code, but do not define app behavior beyond Tier 0:
-
-- spec/IFS_Parts_Mapper_Spec_to_Code_Mapping_Table.md
-- spec/IFS_Parts_Mapper_V1_Build_Map.md
-- spec/IFS_Parts_Mapper_V1_UI_Wireframe_Spec.md
-
-If Tier 3 conflicts with Tier 0–2, higher tiers win.
+If any document conflicts with a higher item, the higher item wins.
 
 ---
 
-## TIER 4 — Model Contracts, Schemas, Clarifications, and Errata (Support Only)
+## Non-Canonical / Archive (Must Not Be Used As Authority)
 
-These documents clarify or constrain representation formats. They never expand scope:
+The following file is NOT canonical for V1 because it conflicts with the governance hierarchy and/or the binding V1 data contract:
 
-- spec/IFS_Parts_Mapper_V1_Model_Contract.md
-- spec/IFS_Parts_Mapper_Minimal_Canonical_JSON_Schema_V1.md
-- spec/IFS_Parts_Mapper_V1_Clarifications_Patch.md
-- spec/IFS_Parts_Mapper_v1_Errata.md
+- spec/IFS_PARTS_MAPPER_MASTER_SPEC.md
 
-If Tier 4 conflicts with Tier 0–3, higher tiers win.
+It may be retained as an archive/reference, but it must not be treated as the source of truth.
 
 ---
 
-## Global Non-Drift Rule (Applies to ALL Tiers)
+## Global Non-Drift Rule (Applies to ALL Documents)
 
 No document and no implementation may introduce:
 
-- new Part Types (Part Types are a closed system)
+- new Part Types (closed system)
 - Self as a Part (forbidden)
 - interpretive logic or inferred meaning
 - therapeutic guidance or analysis
@@ -78,4 +52,4 @@ No document and no implementation may introduce:
 
 Only the user declares meaning. The system records what the user chooses to represent.
 
-END SPEC AUTHORITY MAP
+END SPEC AUTHORITY MAP (V1)
