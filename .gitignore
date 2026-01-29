@@ -1,0 +1,71 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py.class
+
+# =========================
+# Virtual Environments
+# =========================
+.venv/
+venv/
+ENV/
+env/
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+*.env
+
+# =========================
+# Local Test / Scratch Files
+# =========================
+_test.json
+*_test.json
+test_*.json
+dev_*.py
+*_scratch.py
+*_temp.py
+
+# =========================
+# IDE / Editor Files
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# Build / Cache Artifacts
+# =========================
+.cache/
+.mypy_cache/
+.pytest_cache/
+coverage/
+htmlcov/
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Safety Rule: Never Ignore Spec
+# =========================
+!spec/
+!spec/**/*.md
