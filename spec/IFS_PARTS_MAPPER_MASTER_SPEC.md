@@ -1,3 +1,13 @@
+> ⚠️ NON-CANONICAL DOCUMENT (V1)
+>
+> This file is NOT the authoritative specification for IFS Parts Mapper V1.
+>
+> The canonical authority order is defined in:
+> - spec/IFS_Parts_Mapper_V1_Supreme_Authority.md
+> - spec/SPEC_AUTHORITY_MAP.md
+>
+> This document is retained for historical/reference purposes only.
+> If it conflicts with higher-authority specs, it must be ignored.
 # IFS PARTS MAPPER  
 ## MASTER SPECIFICATION (FINAL)
 
@@ -304,3 +314,4 @@ The application must not:
 When in doubt, prefer neutrality over explanation.
 
 ---
+
