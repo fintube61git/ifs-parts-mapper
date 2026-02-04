@@ -12,20 +12,20 @@ If any other spec contradicts this document, the higher-precedence rules in Erra
 
 ## 0) Scope of This Contract
 
-This contract applies ONLY to the model layer:
+This contract applies to:
 
-Included:
-
-* Data structures
+* Canonical data structures
 * Validation rules
-* Canonical JSON import/export shape
+* Canonical JSON import/export (the importable artifact)
 * Deterministic behavior and constraints
+
+This contract also defines the model-layer requirements that support share/print export fidelity (without defining UI rendering).
 
 Explicitly excluded:
 
 * UI logic (Streamlit)
-* Graph rendering (pyvis / Graphviz)
-* Persistence beyond explicit JSON import/export
+* Graph rendering implementation details (pyvis / Graphviz / canvas libs)
+* Persistence beyond explicit user actions
 * Analytics, inference, ranking, summaries, or insights
 
 The model layer must remain framework-agnostic and purely structural.
@@ -47,7 +47,6 @@ Allowed categories (V1 only):
 * Manager
 * Firefighter
 * Exile
-* SelfLike
 * Other
 
 Optional fields (and only these):
@@ -56,6 +55,56 @@ Optional fields (and only these):
 * intensity: integer (0–10 inclusive)
 * notes: string (≤ 280 characters)
 * tags: list of strings
+* self_like: boolean
+* avatar: object (presentation-only)
+* position: object (geometry-only)
+
+self_like rules:
+
+* self_like is a boolean badge that may apply to any Part.
+* If self_like is absent, it is treated as false.
+* self_like must not create or imply a literal "Self" Part.
+* self_like must not trigger inference, interpretation, ranking, or guidance.
+* self_like is always user-declared.
+
+avatar shape:
+
+{
+  "kind": "person" | "animal" | "symbol",
+  "token": string,
+  "presentation": "neutral" | "woman" | "man" (optional; only when kind="person"),
+  "tone": integer (0–5 inclusive; only when kind="person")
+}
+
+avatar rules:
+
+* avatar is user-declared only (no inference).
+* token must refer to a stable identifier from an open-source icon library.
+* presentation is allowed only when kind="person".
+* tone scale is neutral:
+  * 0 = unspecified/default
+  * 1–5 = increasing darkness
+* tone must be 0 or absent when kind != "person".
+* avatar must not affect category, relationships, validation, or meaning.
+* avatar must not be used to infer psychological, demographic, or clinical attributes.
+
+position shape:
+
+{
+  "x": number,
+  "y": number
+}
+
+position rules:
+
+* position is geometry-only metadata used to preserve user-chosen layout.
+* position must be user-driven (e.g., explicit drag/move actions).
+* If position is absent, the Part remains valid.
+* If position is present:
+  * x must be a number
+  * y must be a number
+* position must not affect category, relationships, or meaning.
+* position must not trigger inference or interpretation.
 
 Hard constraints:
 
@@ -132,7 +181,7 @@ Required fields:
 
 schema_version rules:
 
-* export must emit "1.0.0"
+* export must emit "1.0.1"
 * import must accept only 1.x.x
 
 Map-level constraints:
@@ -162,6 +211,14 @@ Relationships:
 * delete_relationship
 * get_relationship
 
+Layout support (V1):
+
+* update_part_position(part_id, x, y)
+
+Rules:
+- position updates must result only from explicit user actions (e.g., drag/move)
+- no background autosave of position without explicit user action to save/export
+
 Bulk linking (V1 only):
 
 * bulk_link_protects(protector → multiple exiles)
@@ -185,6 +242,8 @@ Field-level validation:
 * correct data types
 * allowed values only
 * length limits for notes
+* numeric ranges for intensity/strength
+* structural validity for avatar and position
 
 Cross-object validation:
 
@@ -205,21 +264,47 @@ Error handling:
 
 ---
 
-## 4) Canonical JSON Contract
+## 4) Import/Export Contract (V1)
+
+### 4.1 Canonical Map Export (Importable JSON)
 
 Export behavior:
 
 * output must match canonical JSON shape exactly
 * no inferred or derived fields
-* schema_version fixed to "1.0.0"
+* schema_version fixed to "1.0.1"
+* must include all user-declared data, including avatar and position (when present)
 
 Import behavior:
 
 * strict schema enforcement
 * rejection of unknown fields
 * enforcement of all constraints
+* import must accept only canonical JSON maps (1.x.x)
 
-No persistence occurs at the model layer.
+The importer must not accept share/print artifacts.
+
+---
+
+### 4.2 Share/Print Export Support (Non-Importable)
+
+V1 requires support for a user-initiated share/print export artifact.
+
+Rules:
+
+* share/print export must be PDF (V1 primary)
+* share/print export is NOT importable and must not be accepted by the importer
+* share/print export must be a faithful representation of the on-screen map, including:
+  - node positions (from Part.position, when present)
+  - node labels
+  - categories
+  - relationship lines and directionality
+  - relationship types (protects / polarized_with)
+  - avatars (when present)
+  - map title and a minimal legend
+* share/print export must not add meaning, summaries, insights, advice, or recommendations
+
+This contract does not prescribe the rendering engine; it prescribes fidelity and non-interpretation.
 
 ---
 
@@ -230,20 +315,22 @@ The model layer must make the following impossible or invalid:
 * creation of a Self node
 * introduction of new relationship types
 * implicit meaning, scoring, ranking, or inference
-* persistence outside explicit JSON import/export
+* persistence outside explicit user actions
 * leakage of user content into logs or errors
+* acceptance of non-canonical artifacts as importable data
 
 ---
 
 ## 6) Compliance Criteria
 
-The model layer is compliant with V1 only if:
+The system is compliant with V1 only if:
 
 * all constraints in this contract are enforced
-* import/export round-trip is lossless
+* canonical JSON import/export round-trip is lossless
+* share/print export is faithful and non-interpretive
 * privacy constraints are upheld
 * no interpretive or diagnostic features exist
-* system behavior remains purely structural
+* user ownership and explicit action are preserved
 
 ---
 
@@ -255,7 +342,8 @@ For V1 interpretation, precedence is:
 2. Clarifications Patch
 3. Minimal Canonical JSON Schema
 4. This Model Contract
-5. Master Spec Hardened
-6. All other spec documents
+5. V1 Canonical Model
+6. Master Spec Hardened
+7. All other documents
 
 If conflicts exist, higher-precedence documents win.

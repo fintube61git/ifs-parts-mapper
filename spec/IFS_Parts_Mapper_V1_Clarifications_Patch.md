@@ -1,112 +1,155 @@
-# IFS Parts Mapper V1 — Clarifications Patch
+# IFS Parts Mapper V1 — Clarifications Patch (Binding)
 
-This document resolves remaining ambiguities in the V1 specification.
+This document clarifies ambiguous areas of the V1 specification.
 
-It does not add features or expand scope.
-It only clarifies existing rules to prevent drift.
+This file does not expand scope beyond V1.
+It resolves wording conflicts and prevents interpretive drift.
 
-If any earlier spec documents conflict with this patch, this patch takes precedence.
+Precedence order:
 
----
-
-## Clarification 001 — Notes Length Limit (V1)
-
-Issue:
-Specs state that notes must be “short” but do not define a limit.
-
-Resolution (V1 Final):
-- Part.notes and Relationship.notes must be ≤ 280 characters.
-- If the limit is exceeded, validation must fail.
-
-Rationale:
-- Prevents journaling and PHI risk.
-- Enforces descriptive, not narrative, usage.
-
----
-
-## Clarification 002 — intensity and strength Data Type (V1)
-
-Issue:
-Specs describe intensity and strength conceptually but do not define type.
-
-Resolution (V1 Final):
-- intensity and strength are optional integers.
-- Valid range: 0–10 inclusive.
-- If present and invalid, validation must fail.
-
-Rationale:
-- Prevents drift into scoring systems.
-- Ensures consistent schema enforcement.
-
----
-
-## Clarification 003 — Unknown Fields on Import (V1)
-
-Issue:
-Specs inconsistently describe whether unknown fields should be rejected or flagged.
-
-Resolution (V1 Final):
-- Unknown fields in imported JSON must be rejected.
-- Import must fail if any unknown fields are present.
-
-Rationale:
-- Prevents silent schema drift.
-- Enforces strict canonical structure.
-
----
-
-## Clarification 004 — schema_version Import Rule (V1)
-
-Issue:
-schema_version behavior is partially specified but not explicitly enforced.
-
-Resolution (V1 Final):
-- Export must always emit schema_version = "1.0.0".
-- Import must accept only schema_version matching 1.x.x.
-- Import must reject any other schema_version.
-
----
-
-## Clarification 005 — Trailhead Language in UI (V1)
-
-Issue:
-UI specs use “tags” language that implies ontology or taxonomy.
-
-Resolution (V1 Final):
-- dominant_protector_patterns and core_vulnerability_themes are lists of short descriptive phrases (strings).
-- No controlled vocabulary, ontology, or semantic inference is permitted.
-
-UI wording must avoid the term “tags” in V1.
-
----
-
-## Clarification 006 — Bulk Linking Scope (V1)
-
-Issue:
-Bulk linking is required but its scope is not fully specified.
-
-Resolution (V1 Final):
-- Bulk linking applies only to:
-  - protects relationships
-  - between protectors and exiles
-- Bulk linking must not apply to:
-  - polarized_with relationships
-  - other category pairings in V1.
-
-Rationale:
-- Prevents ontology creep.
-- Aligns with V1 UI wireframe and scope freeze.
-
----
-
-## Priority Order Update (V1)
-
-For V1 interpretation, precedence is now:
-
-1. Errata file
-2. Clarifications Patch (this document)
-3. Minimal Canonical JSON Schema
-4. Master Spec Hardened
-5. All other spec documents
+1) Errata
+2) This Clarifications Patch
+3) Minimal Canonical JSON Schema
+4) Model Contract
+5) V1 Canonical Model
+6) Master Spec Hardened
+7) All other documents
 
 If conflicts exist, higher-precedence documents win.
+
+---
+
+## Clarification 001 — Parts vs Self
+
+Self must never be represented as a Part.
+
+Parts are user-declared representational elements.
+
+SelfLike is not a Part category.
+SelfLike is a boolean badge (`self_like`) that may apply to any Part.
+
+No inference, interpretation, or transformation of SelfLike is permitted.
+
+---
+
+## Clarification 002 — Intensity and Strength Semantics
+
+The fields:
+
+- Part.intensity
+- Relationship.strength
+
+must be interpreted as user-declared integers in the range 0–10.
+
+Rules:
+
+- No normalization or rescaling is permitted.
+- No semantic interpretation is permitted.
+- Absence of these fields must not trigger default scoring or inference.
+
+---
+
+## Clarification 003 — Tags and Subtype
+
+The fields:
+
+- tags
+- subtype
+
+are purely descriptive user metadata.
+
+Rules:
+
+- They must not be interpreted.
+- They must not drive classification or inference.
+- They must not trigger UI automation or suggestions.
+
+---
+
+## Clarification 004 — Schema Versioning (V1)
+
+Schema versioning rules:
+
+- Export must emit schema_version = "1.0.1".
+- Import must accept only schema versions in the 1.x.x range.
+- Unknown or incompatible versions must be rejected.
+
+schema_version indicates structural compatibility, not feature richness.
+
+---
+
+## Clarification 005 — Presentation Metadata (Avatars)
+
+The optional Part field `avatar` is presentation-only metadata.
+
+Rules:
+
+- avatar must not affect category, relationships, or validation.
+- avatar must not be interpreted psychologically or clinically.
+- avatar must not trigger inference, ranking, or guidance.
+- avatar is always user-declared.
+
+avatar exists solely to support visual externalization.
+
+---
+
+## Clarification 006 — Geometry Metadata (Positions)
+
+The optional Part field `position` is geometry-only metadata.
+
+Rules:
+
+- position preserves user-chosen layout (e.g., freeform drag/move).
+- position must not be interpreted as psychological meaning by the system.
+- position must not affect category, relationships, or validation beyond type checking.
+- position is always user-driven; no inference or suggestions are permitted.
+
+position exists solely to preserve the user’s visual externalization.
+
+---
+
+## Clarification 007 — Dual Export Artifacts (V1)
+
+V1 export supports two distinct artifacts:
+
+A) Canonical Map Export (Importable JSON)
+- Strict canonical JSON (schema_version "1.0.1")
+- The only importable artifact
+
+B) Share/Print Export (Human-readable PDF)
+- Not importable
+- Must visually match, as closely as possible, what the user saw on screen
+- Must include only user-declared content and layout (including Part.position when present)
+- Must not add meaning, summaries, insights, advice, or recommendations
+
+The importer must accept only the canonical JSON artifact.
+
+---
+
+## Clarification 008 — Non-Interpretation Principle
+
+The system must not:
+
+- interpret Parts or relationships
+- infer meaning, intent, or diagnosis
+- generate insights, summaries, or recommendations
+- auto-classify or auto-link Parts
+- suggest categories, relationships, avatars, or positions
+
+All representational meaning is supplied by the user.
+
+---
+
+## Clarification 009 — Explicit User Action
+
+All state changes must result from explicit user action.
+
+Rules:
+
+- No autosave without user intent.
+- No automatic relationship creation.
+- No implicit mutation of Parts or Maps.
+
+---
+
+END CLARIFICATIONS PATCH

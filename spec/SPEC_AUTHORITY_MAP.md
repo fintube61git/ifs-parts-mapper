@@ -1,55 +1,165 @@
-# IFS PARTS MAPPER — SPEC AUTHORITY MAP (V1)
+# IFS Parts Mapper — Specification Authority Map (V1)
 
-This file defines the authoritative hierarchy of specifications for IFS Parts Mapper V1.
+This document defines the canonical hierarchy of specification documents.
 
-If any documents conflict, the higher-priority document always overrides lower-priority ones.
+When specifications conflict, the higher-precedence document always wins.
 
----
-
-## Governance Rule (Tier 0)
-
-spec/IFS_Parts_Mapper_V1_Supreme_Authority.md
-
-This file defines the final authority rules for V1.
-No other spec files should be edited to resolve conflicts; follow its authority order.
+Implementations must follow this hierarchy strictly.
 
 ---
 
-## Canonical Authority Order (V1)
+## Authority Hierarchy (Highest → Lowest)
 
-1) spec/IFS_Parts_Mapper_v1_Errata.md  
-2) spec/IFS_Parts_Mapper_V1_Clarifications_Patch.md  
-3) spec/IFS_Parts_Mapper_Minimal_Canonical_JSON_Schema_V1.md  
-4) spec/IFS_Parts_Mapper_V1_Model_Contract.md  
-5) spec/IFS_Parts_Mapper_Master_Spec_Hardened.md  
-6) All other documents (UI, Build Map, Mapping Table, etc.)
+### Level 1 — Errata (Highest Authority)
 
-If any document conflicts with a higher item, the higher item wins.
+Binding corrections to the V1 specification.
 
----
+Files:
 
-## Non-Canonical / Archive (Must Not Be Used As Authority)
+- spec/IFS_Parts_Mapper_v1_Errata.md
 
-The following file is NOT canonical for V1 because it conflicts with the governance hierarchy and/or the binding V1 data contract:
+Characteristics:
 
-- spec/IFS_PARTS_MAPPER_MASTER_SPEC.md
-
-It may be retained as an archive/reference, but it must not be treated as the source of truth.
+- May modify or correct model structure.
+- May introduce minimal structural changes required for real-world usability.
+- Overrides all other documents.
 
 ---
 
-## Global Non-Drift Rule (Applies to ALL Documents)
+### Level 2 — Clarifications Patch
 
-No document and no implementation may introduce:
+Binding clarifications that resolve ambiguity without expanding scope.
 
-- new Part Types (closed system)
-- Self as a Part (forbidden)
-- interpretive logic or inferred meaning
-- therapeutic guidance or analysis
-- automatic classification, inference, or pattern detection
-- autosave without explicit user action
-- accounts, default uploads, or telemetry about Parts/maps
+Files:
 
-Only the user declares meaning. The system records what the user chooses to represent.
+- spec/IFS_Parts_Mapper_V1_Clarifications_Patch.md
 
-END SPEC AUTHORITY MAP (V1)
+Characteristics:
+
+- Clarifies meaning and intent of V1 rules.
+- Must not contradict Errata.
+- Must not introduce interpretive or therapeutic logic.
+
+---
+
+### Level 3 — Canonical Schema Definition
+
+The authoritative structural definition of V1 data.
+
+Files:
+
+- spec/IFS_Parts_Mapper_Minimal_Canonical_JSON_Schema_V1.md
+
+Characteristics:
+
+- Defines exact JSON shape and allowed fields.
+- Enforces strict validation and anti-drift rules.
+- Must align with Errata and Clarifications.
+
+---
+
+### Level 4 — Model Contract
+
+Operational interpretation of the canonical schema.
+
+Files:
+
+- spec/IFS_Parts_Mapper_V1_Model_Contract.md
+
+Characteristics:
+
+- Defines validation rules and model-layer behavior.
+- Must align with higher-precedence documents.
+- Must remain non-interpretive.
+
+---
+
+### Level 5 — Canonical Model Summary
+
+Human-readable conceptual model.
+
+Files:
+
+- spec/V1_CANONICAL_MODEL.md
+
+Characteristics:
+
+- Summarizes the conceptual meaning of V1 entities.
+- Must not contradict structural or contractual documents.
+- Serves as explanatory guidance only.
+
+---
+
+### Level 6 — Master Specification
+
+Comprehensive design narrative and constraints.
+
+Files:
+
+- spec/IFS_Parts_Mapper_Master_Spec_Hardened.md
+
+Characteristics:
+
+- Provides broader context and rationale.
+- Must defer to all higher-precedence documents.
+- Must not introduce new model structures.
+
+---
+
+### Level 7 — Supporting and Guidance Documents (Lowest Authority)
+
+Non-binding reference materials.
+
+Examples:
+
+- spec/START_HERE.md
+- spec/IFS_PARTS_MAPPER_MASTER_SPEC.md (explicitly non-canonical)
+- README_DEV.md
+- UI wireframes and design notes
+- exploratory or draft documents
+
+Characteristics:
+
+- Guidance only.
+- Must never override canonical specifications.
+- May be incomplete or experimental.
+
+---
+
+## Conflict Resolution Rule
+
+If two documents conflict:
+
+1) Identify the higher-precedence document in this hierarchy.
+2) Follow the higher-precedence document.
+3) Treat the lower-precedence document as incorrect or outdated.
+
+No implementation may rely on lower-precedence documents when higher-precedence documents exist.
+
+---
+
+## V1 Scope Boundary
+
+All documents in this hierarchy enforce the V1 scope:
+
+The system must NOT:
+
+- interpret Parts or relationships
+- infer meaning, intent, or diagnosis
+- generate insights, summaries, or recommendations
+- auto-classify or auto-link Parts
+- rank, score, or evaluate Parts
+- provide therapeutic guidance
+- apply AI/ML to interpret Maps
+
+The system must remain:
+
+- non-clinical
+- phenomenological
+- representational
+- privacy-first
+- user-owned
+
+---
+
+END SPEC AUTHORITY MAP

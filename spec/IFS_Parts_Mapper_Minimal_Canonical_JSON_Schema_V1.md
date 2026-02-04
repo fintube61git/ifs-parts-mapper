@@ -1,9 +1,13 @@
 # Minimal Canonical JSON Schema (Human-Readable, V1)
 
-This defines the **canonical v1 JSON shape** the data model must match.
+This defines the **canonical V1 JSON shape** the data model must match.
 It is intentionally human-readable and spec-locked.
 
-This document is binding for V1.
+This document is binding for V1 canonical JSON import/export.
+
+NOTE:
+- This schema defines the importable/exportable JSON artifact only.
+- Share/print exports (PDF) are separate non-importable artifacts and are governed by Errata.
 
 ---
 
@@ -32,7 +36,7 @@ Required keys (must exist):
 - trailhead
 
 Rules:
-- schema_version must be "1.0.0" on export
+- schema_version must be "1.0.1" on export
 - import must accept schema_version 1.x.x only
 - unknown top-level keys are rejected (anti-drift)
 
@@ -74,16 +78,54 @@ Required keys:
 
 Optional keys:
 - subtype (string)
-- intensity (number; conceptually 0–10)
-- notes (string; short)
+- intensity (integer; 0–10 inclusive)
+- notes (string; ≤ 280 chars)
 - tags ([string])
+- self_like (boolean)
+- avatar (object; presentation-only)
+- position (object; geometry-only)
 
 Allowed category values (V1 only):
 - "Manager"
 - "Firefighter"
 - "Exile"
-- "SelfLike"
 - "Other"
+
+self_like rules (V1):
+- self_like is a boolean badge that may apply to any Part
+- if absent, it is treated as false
+- self_like must not be used to infer meaning or create a "Self" Part
+
+avatar shape (V1):
+{
+  "kind": "person" | "animal" | "symbol",
+  "token": string,
+  "presentation": "neutral" | "woman" | "man" (optional; only when kind="person"),
+  "tone": integer (0–5 inclusive; only when kind="person")
+}
+
+avatar rules (V1):
+- avatar is user-declared only (no inference)
+- token must refer to a stable identifier from an open-source icon library
+- presentation is allowed only when kind="person"
+- tone scale is neutral:
+  - 0 = unspecified/default
+  - 1–5 = increasing darkness
+- tone must be 0 or absent when kind != "person"
+- avatar must not affect category or relationships (presentation-only)
+
+position shape (V1):
+{
+  "x": number,
+  "y": number
+}
+
+position rules (V1):
+- position is geometry-only metadata (no inference)
+- position is user-driven (e.g., drag/move)
+- if position is absent, the Part is still valid
+- x and y must be numbers if present
+- position must not affect category or relationships
 
 Hard rules:
 - id must be non-empty after trimming
@@ -105,8 +147,8 @@ Required keys:
 - type (string)
 
 Optional keys (allowed by spec):
-- strength (number; conceptually 0–10)
-- notes (string; short)
+- strength (integer; 0–10 inclusive)
+- notes (string; ≤ 280 chars)
 
 Allowed type values (V1 only):
 - "protects" (directional)
@@ -135,3 +177,14 @@ Duplicate rules:
 - No self-loops
 - No duplicates (as defined above)
 - trailhead object must exist and contain all required keys (even if empty)
+
+---
+
+## Import/Export Note (V1)
+
+This schema defines the canonical JSON map file (importable).
+
+Share/print exports (PDF) are separate artifacts:
+- Not importable
+- Must faithfully represent the on-screen map (see Errata)
+
