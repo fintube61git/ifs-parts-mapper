@@ -1,260 +1,271 @@
-# IFS Parts Mapper — V1 UI Wireframe Specification (No Code)
+# IFS Parts Mapper — V1 UI Wireframe Specification
+
+Status: LOCKED  
+Scope: V1 ONLY  
+Type: UI states and transitions (design-only)  
+Code: NONE  
+
+This document defines the authoritative V1 user-interface flow for the
+IFS Parts Mapper application.
+
+It is derived strictly from the frozen canonical specifications and the
+approved UI-flow decisions.
+
+This document is a governance artifact.
+If implementation conflicts with this document, the implementation is wrong.
+
+────────────────────────────────────────────
+CORE PRINCIPLES
+────────────────────────────────────────────
+
+• Non-clinical
+• Phenomenological
+• Privacy-first
+• Local-first
+• User-owned
+• No interpretation
+• No inference
+• No autosave
+• No guidance
+• No persistence without explicit export
+
+────────────────────────────────────────────
+STATE 1 — ENTRY / NEW MAP
+────────────────────────────────────────────
+
+Screen ID: ENTRY_NEW_MAP
+
+Visible:
+• Primary action: “Start a new map”
+• Anchored empty canvas (orientation only, non-interactive)
+
+Not visible:
+• No map name
+• No save or export
+• No parts
+• No categories
+• No help or tutorial
+
+User actions:
+• Start a new map
+
+Transition:
+• Start a new map → MAP_ACTIVE_EMPTY
+
+────────────────────────────────────────────
+STATE 2 — ACTIVE MAP (EMPTY)
+────────────────────────────────────────────
+
+Screen ID: MAP_ACTIVE_EMPTY
+
+Visible:
+• Interactive empty canvas
+• Primary action: “Add a part”
+
+Not visible:
+• No relationships
+• No export
+• No save
+• No completion language
+
+User actions:
+• Add a part
+• Leave the app
+
+Transition:
+• Add a part → PART_CREATE
+
+────────────────────────────────────────────
+STATE 3 — CREATE PART
+────────────────────────────────────────────
+
+Screen ID: PART_CREATE
+
+Visible:
+• Input: Part name (required)
+• Selector: Category
+  – Manager
+  – Firefighter
+  – Exile
+  – Other
+• Optional:
+  – Self-like (boolean badge only)
+  – Avatar (visual metadata only)
+• Confirm action
+
+Not visible:
+• No examples
+• No suggestions
+• No guidance text
+• No interpretation
+
+User actions:
+• Confirm creation
+• Cancel
 
-This document defines the v1 UI wireframe at a conceptual level.
-It is intentionally framework-agnostic and contains no code.
+Transition:
+• Confirm → PART_PLACEMENT
+• Cancel → return to prior map state
 
-Goals:
-- minimal visible complexity
-- high readability
-- low cognitive load
-- enforce provisionality, non-diagnostic framing, and privacy rules
+────────────────────────────────────────────
+STATE 4 — PLACE PART
+────────────────────────────────────────────
 
----
+Screen ID: PART_PLACEMENT
+
+Visible:
+• Newly created part on canvas
+• Part is draggable
 
-## 1) Global Layout
+Not visible:
+• No grid
+• No snapping
+• No auto-layout
+• No meaning attached to position
 
-Single-page application with three vertical zones:
+User actions:
+• Drag part
+• Leave part where it appears
 
-A) Top Bar (always visible)  
-B) Main Work Area (two columns)  
-C) Footer / Status (small, always visible)
+Transition:
+• Placement complete → MAP_ACTIVE_WITH_PARTS
+
+────────────────────────────────────────────
+STATE 5 — ACTIVE MAP (WITH PARTS)
+────────────────────────────────────────────
+
+Screen ID: MAP_ACTIVE_WITH_PARTS
+
+Visible:
+• Canvas with one or more parts
+• Actions:
+  – Add a part
+  – Add a relationship (only if two or more parts exist)
+
+Not visible:
+• No progress indicators
+• No “next” step
+• No required actions
 
----
-
-## 2) Top Bar (Zone A)
-
-### 2.1 Left: App Identity
-- Title: “IFS Parts Mapper (V1)”
-- Subtitle: “A provisional map. Not a diagnosis.”
-
-### 2.2 Center: Map Controls (compact)
-- Map Title field (short)
-- “New / Clear Session” button (prominent)
-
-### 2.3 Right: Privacy Banner (persistent)
-Always visible text:
-- “No accounts. No server storage. Export is your save.”
-- “Avoid identifying or clinical details.”
-
-Optional: small info icon that expands to show:
-- “Session-only. Nothing is saved unless you export.”
-- “Maps are snapshots and can be revised anytime.”
-
----
-
-## 3) Main Work Area (Zone B)
-
-Two columns:
-
-LEFT COLUMN = Controls Panel  
-RIGHT COLUMN = Graph Panel
-
-Default width: Controls 35–40%, Graph 60–65%.
-(Adjustable if possible, but not required.)
-
----
-
-## 4) Controls Panel (Left Column)
-
-The Controls Panel is an accordion (collapsible sections) in this order:
-
-1) Trailhead  
-2) Parts  
-3) Relationships  
-4) Filters  
-5) Import / Export
-
-Only one section open by default to reduce clutter.
-
----
-
-### 4.1 Trailhead Section
-
-Purpose: context entry without interpretation.
-
-Fields (all optional but present):
-- Trigger: tags (multi-select or short comma list) + optional short description
-- Dominant protector patterns: tags list
-- Core vulnerability themes: tags list
-
-Microcopy (always present):
-- “Descriptive only. No diagnosis. Keep it brief.”
-
-PASS if:
-- Trailhead can be edited anytime
-- No interpretive prompts appear
-
----
-
-### 4.2 Parts Section
-
-Purpose: create/edit/delete parts.
-
-Subpanel A: Create Part (top)
-- Label (required)
-- Category (required dropdown: Manager, Firefighter, Exile, SelfLike, Other)
-- Subtype (optional, short)
-- Intensity (optional, bounded)
-- Notes (optional, short; character limit; warning text)
-Buttons:
-- “Add Part”
-
-Subpanel B: Parts List (below)
-- Search box (optional, v1.1; not required)
-- List/table of parts with:
-  - label
-  - category
-  - intensity (if present)
-  - actions: Select / Edit / Delete
-
-Editing pattern:
-- Selecting a part populates the Create/Edit fields (same form).
-- Show “Update Part” and “Cancel Edit”.
-- Deleting prompts confirmation: “Delete part and its relationships?”
-
-PASS if:
-- Self cannot be created as a category
-- Deleting a part removes its relationships
-- Notes remain short with visible reminder
-
----
-
-### 4.3 Relationships Section
-
-Purpose: create/edit/delete relationships + bulk linking.
-
-Subpanel A: Add Relationship (single edge)
-- Type dropdown: protects, polarized_with
-- Source part dropdown
-- Target part dropdown
-Buttons:
-- “Add Relationship”
-
-Rules enforced at UI:
-- No self-loops (disable same source/target)
-- For polarized_with: display as “A ↔ B”
-- For protects: display as “A → B (protects)”
-
-Subpanel B: Bulk Linking (required in v1)
-Two tabs:
-
-Tab 1: Protector → Multiple Exiles (protects)
-- Select Protector (single)
-- Select Exiles (multi)
-- Button: “Link (protects)”
-- Note: duplicates skipped
-
-Tab 2: Exile ← Multiple Protectors (protects)
-- Select Exile (single)
-- Select Protectors (multi)
-- Button: “Link (protects)”
-- Note: duplicates skipped
-
-Subpanel C: Relationships List
-- List/table with:
-  - type
-  - endpoints
-  - actions: Delete (and Edit only if needed)
-- Polarization entries appear once (not duplicated).
-
-PASS if:
-- polarized_with stored/displayed as one undirected relationship
-- duplicates are prevented
-- bulk linking works cleanly
-
----
-
-### 4.4 Filters Section
-
-Purpose: display toggles only (no analytics).
-
-Toggles:
-- Show categories: Manager, Firefighter, Exile, SelfLike, Other
-- Show relationship types: protects, polarized_with
-
-PASS if:
-- Filters never change underlying data
-- Filters are reversible
-
----
-
-### 4.5 Import / Export Section
-
-Purpose: user-controlled persistence.
-
-Buttons:
-- Export JSON (canonical)
-- Import JSON
-- Export Graph Image (graph-only)
-
-Warnings (always present):
-- “Export is your save.”
-- “Imports must match schema_version 1.x.x.”
-- “No summaries are generated.”
-
-PASS if:
-- Import restores map without loss
-- Unknown fields rejected or flagged
-- No persistence occurs without explicit export
-
----
-
-## 5) Graph Panel (Right Column)
-
-Graph canvas with:
-
-Top row:
-- “Graph View” label
-- Legend: categories + edge styles (small, neutral)
-
-Main canvas:
-- Interactive graph (drag nodes, pan, zoom)
-- Clicking a node highlights it and shows a small info card (non-interpretive):
-  - label, category, subtype, intensity, notes (if any)
-- Clicking an edge shows:
-  - type and endpoints (no interpretation)
-
-Bottom row:
-- Status text:
-  - “Snapshot. Revisable.”
-  - “No diagnosis or inference.”
-
-PASS if:
-- No Self node appears
-- Node styling is neutral (category-based only)
-- Node size does not encode centrality
-
----
-
-## 6) Empty State Design
-
-When map has no parts:
-- Graph panel shows an empty canvas with a single instruction:
-  - “Add parts on the left to begin.”
-- No sample data is auto-created.
-
----
-
-## 7) Accessibility / Low-Vision Defaults
-
-Required defaults:
-- Large base font
-- High contrast without “alarm” colors
-- Clear spacing
-- Avoid tiny icons-only controls
-- All critical actions are labeled buttons (not icon-only)
-- Keyboard navigation where possible (nice-to-have in v1; required in v1.1+)
-
----
-
-## 8) UI Compliance Checklist (Wireframe Level)
-
-PASS if all are true:
-- No Self node
-- No diagnostic or interpretive language
-- Notes are short with warnings
-- No analytics, ranking, or “insights”
-- Export/import is the only persistence
-- Bulk linking exists
-- polarized_with is undirected and single-instance
-- Visuals are neutral and non-hierarchical
+User actions:
+• Add part
+• Add relationship
+• Reposition parts
+• Leave the app
+
+Transition:
+• Add part → PART_CREATE
+• Add relationship → RELATIONSHIP_CREATE
+• First arrival only → BOUNDARY_NOTICE
+
+────────────────────────────────────────────
+STATE 6 — ONE-TIME BOUNDARY NOTICE
+────────────────────────────────────────────
+
+Screen ID: BOUNDARY_NOTICE
+
+Visible (dismissible notice):
+
+“This map exists only in this session unless you export it.
+Closing the app will discard it.”
+
+Not visible:
+• No save button
+• No export button
+• No urgency language
+
+User actions:
+• Dismiss notice
+
+Transition:
+• Dismiss → MAP_ACTIVE_WITH_PARTS
+• Notice never shown again this session
+
+────────────────────────────────────────────
+STATE 7 — CREATE RELATIONSHIP
+────────────────────────────────────────────
+
+Screen ID: RELATIONSHIP_CREATE
+
+Visible:
+• Selector: Part A
+• Selector: Part B
+• Selector: Relationship type
+  – protects (directional)
+  – polarized_with (undirected)
+• Direction control shown only for protects
+• Confirm action
+
+Not visible:
+• No suggested relationships
+• No inferred links
+• No meaning or weighting
+
+User actions:
+• Confirm
+• Cancel
+
+Transition:
+• Confirm → MAP_ACTIVE_WITH_PARTS
+• Cancel → MAP_ACTIVE_WITH_PARTS
+
+────────────────────────────────────────────
+STATE 8 — EXPORT CHOICE
+────────────────────────────────────────────
+
+Screen ID: EXPORT_CHOICE
+
+Visible:
+Title:
+“What would you like to do with this map?”
+
+Options:
+• Save for later use
+  “Creates a file you can open again in this app.”
+• Create a read-only copy
+  “Creates a copy you can view or share.”
+
+Not visible:
+• No file formats
+• No defaults
+• No recommendations
+
+User actions:
+• Choose option
+• Cancel
+
+Transition:
+• Choose option → OS_SAVE_DIALOG
+• Cancel → MAP_ACTIVE_WITH_PARTS
+
+────────────────────────────────────────────
+STATE 9 — NATIVE OS SAVE DIALOG
+────────────────────────────────────────────
+
+Screen ID: OS_SAVE_DIALOG
+
+Visible:
+• Operating system native save dialog
+  – Windows
+  – macOS
+  – Linux
+
+Pre-dialog text (single line):
+“You’ll choose where this file is saved on your computer.”
+
+Not visible:
+• No app-defined folders
+• No path explanations
+• No storage assumptions
+
+User actions:
+• Save
+• Cancel
+
+Transition:
+• Save → MAP_ACTIVE_WITH_PARTS
+• Cancel → MAP_ACTIVE_WITH_PARTS
+
+────────────────────────────────────────────
+END OF DOCUMENT
+────────────────────────────────────────────
